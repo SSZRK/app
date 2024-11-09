@@ -2,6 +2,7 @@
 use tauri::menu::{Menu, MenuBuilder, MenuItem, Submenu, SubmenuBuilder};
 use tauri::Emitter;
 use tauri_plugin_dialog::{DialogExt, MessageDialogButtons};
+use tauri_plugin_updater::UpdaterExt;
 
 pub fn run() {
     tauri::Builder::default()
