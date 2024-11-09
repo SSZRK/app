@@ -28,6 +28,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: prepare variables
+        env:
+          TAURI_APP_PRIVATE: ${{ secrets.TAURI_APP_PRIVATE }}
+          TAURI_APP_PASSWORD: ${{ secrets.TAURI_APP_PASSWORD }}
+        run: |
+          export TAURI_SIGNING_PRIVATE_KEY="$env:TAURI_APP_PRIVATE"
+          export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="$env:TAURI_APP_PASSWORD"
+
       - name: setup node
         uses: actions/setup-node@v4
         with:
