@@ -3,13 +3,14 @@ import {useEffect, useState} from "react";
 import Loading from "../../components/common/loading.tsx";
 import {getJwt} from "../../utils/jwt.ts";
 import {callApi, Method} from "../../utils/call_api.ts";
+import {User} from "../../utils/types.ts";
 
 export default function Admin() {
     const {projectId} = useParams();
 
     const [loading, setLoading] = useState(true);
     const [jwt, setJwt] = useState('');
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState<User>({});
 
     useEffect(() => {
         getData();
@@ -23,7 +24,7 @@ export default function Admin() {
 
     const getUser = async () => {
         const token = await getJwt();
-        setJwt(token);
+        setJwt(token || '');
         const response = await callApi('/admin/get-user', {
             jwt: token,
             projectId,
@@ -63,7 +64,7 @@ export default function Admin() {
                 <div className="p-2 bg-white w-60 flex flex-col md:flex" id="sideNav">
                     <nav>
                         <a className="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-cyan-300 hover:text-white"
-                           href="admin">
+                           href="#">
                             Strona główna
                         </a>
                         <a className="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-cyan-300 hover:text-white"

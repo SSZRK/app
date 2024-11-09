@@ -1,16 +1,14 @@
 import {useParams, useNavigate} from "react-router-dom";
-import {FormEvent, useContext, useEffect, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import {callApi, Method} from "../utils/call_api.ts";
 import Alert, {AlertProps} from "../components/common/alert.tsx";
-import useAuth from "../hooks/use-auth.ts";
 import Loading from "../components/common/loading.tsx";
 import {getJwt} from "../utils/jwt.ts";
 
 export default function UserSetter() {
-    const {auth} = useAuth();
     const {projectId} = useParams();
     const navigate = useNavigate();
-    const [jwt, setJwt] = useState<string>('');
+    const [jwt, setJwt] = useState<string | null>('');
 
     const [username, setUsername] = useState('');
     const [verificationField1, setVerificationField1] = useState('');

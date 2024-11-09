@@ -4,12 +4,13 @@ import {useEffect} from "react";
 import HandwrittenArea from "../handwritten-area.tsx";
 import HandwrittenUnderline from "../handwritten-underline.tsx";
 
-export default function AnnouncementPostMovementLogPage({
-                                                            data, pageIndex, updatePage = (index, data) => {
-    }
-                                                        }) {
+type Props = {
+    data: any;
+    pageIndex: number;
+    updatePage: (index: number, data: any) => void;
+}
 
-
+export default function AnnouncementPostMovementLogPage({data, pageIndex, updatePage}: Props) {
     useEffect(() => {
         if (data.rows.length !== 20)
             updatePage(pageIndex, {
@@ -34,14 +35,14 @@ export default function AnnouncementPostMovementLogPage({
             });
     }, [data]);
 
-    const handleChange = (field, value) => {
+    const handleChange = (field: string, value: any) => {
         updatePage(pageIndex, {
             ...data,
             [field]: value,
         });
     }
 
-    const handleRowChange = (field, value, index) => {
+    const handleRowChange = (field: string, value: any, index: number) => {
         const rows = [...data.rows];
         rows[index][field] = value;
         updatePage(pageIndex, {
@@ -50,7 +51,7 @@ export default function AnnouncementPostMovementLogPage({
         });
     }
 
-    const handleWideText = (value, index) => {
+    const handleWideText = (value: any, index: number) => {
         const rows = [...data.rows];
         rows[index].wide = value;
         updatePage(pageIndex, {
@@ -59,7 +60,7 @@ export default function AnnouncementPostMovementLogPage({
         });
     }
 
-    const handleCrossOut = (index) => {
+    const handleCrossOut = (index: number) => {
         const rows = [...data.rows];
         rows[index].crossedOut = !rows[index].crossedOut;
         updatePage(pageIndex, {
@@ -172,7 +173,7 @@ export default function AnnouncementPostMovementLogPage({
                 </thead>
                 <tbody>
                 {
-                    data.rows.map((row, index) => {
+                    data.rows.map((row: any, index: number) => {
                         return <tr key={index} className="h-11 relative">
                             <td className="border border-black"><Handwritten text={row.trainNumberOdd}
                                                                              setText={(e) => handleRowChange('trainNumberOdd', e, index)}
@@ -218,7 +219,7 @@ export default function AnnouncementPostMovementLogPage({
                                                                                         align="center"/>
                             </td>
                             {
-                                row.notified.map((notified, notifiedIndex) => {
+                                row.notified.map((notified: string, notifiedIndex: number) => {
                                     return <td key={notifiedIndex} className="border border-black">
                                         <Handwritten text={notified}
                                                      setText={(e) => {

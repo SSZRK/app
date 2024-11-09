@@ -1,52 +1,43 @@
-import {useParams} from "react-router-dom";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import MileageBookPagesSwitch from "../components/document-editor/mileage-book/pages-switch.tsx";
 import NewFileModal from "../components/document-editor/new-file-modal.tsx";
 import {createFileByType} from "../utils/create-file-by-type.ts";
-import {listen} from "@tauri-apps/api/event";
 import AnnouncementPostMovementLogPagesSwitch
     from "../components/document-editor/announcement-post-movement-log/pages-switch.tsx";
+import {DocumentEditorFile, DocumentEditorPage} from "../utils/types.ts";
 
 export default function DocumentEditor() {
-    const {id} = useParams();
     const isInApp = !!window.__TAURI__;
-
 
     const [showHeader, setShowHeader] = useState(false);
     const [showFileDropdown, setShowFileDropdown] = useState(false);
     const [showNewFileModal, setShowNewFileModal] = useState(false);
     const [pagination, setPagination] = useState({page: 0, pages: 1});
-    const [file, setFile] = useState({});
-    const [newPages, setNewPages] = useState([]);
+    const [file, setFile] = useState<DocumentEditorFile>({});
+    const [newPages, setNewPages] = useState<Array<DocumentEditorPage>>([]);
 
     useEffect(() => {
-        // TAURI CONFIG
-        const unListenNewFile = isInApp && listen('handleNewFile', (event) => handleNewFile());
-        const unListenImport = isInApp && listen('handleImport', (event) => handleImport());
-        const unListenExport = isInApp && listen('handleExport', (event) => handleExport());
-
         window.addEventListener("beforeunload", alertUser);
         return () => {
             window.removeEventListener("beforeunload", alertUser);
         };
     }, [file, newPages]);
 
-    const alertUser = (e) => {
+    const alertUser = (e: WindowEventMap["beforeunload"]) => {
         e.preventDefault();
-        e.returnValue = "";
     };
 
     const handleNewFile = () => setShowNewFileModal(true);
 
-    const createNewFile = (type) => {
+    const createNewFile = (type: string) => {
         const newFile = createFileByType(type);
         setFile(newFile);
-        setNewPages(newFile.pages);
-        setPagination({page: 0, pages: newFile.pages.length});
+        setNewPages(newFile.pages!);
+        setPagination({page: 0, pages: newFile.pages?.length || 0});
     }
 
-    const handlePageUpdate = (index, data) => {
-        const newPages = [...file.pages];
+    const handlePageUpdate = (index: number, data: Map<any, any>) => {
+        const newPages = [...file.pages as Array<DocumentEditorPage>];
         newPages[index].data = data;
         setNewPages(newPages);
     }
@@ -73,15 +64,15 @@ export default function DocumentEditor() {
         input.type = 'file';
         input.accept = '.sszrk-document';
         input.onchange = (e) => {
-            const file = e.target.files[0];
+            const file = (e.target as HTMLInputElement).files?.[0];
             const reader = new FileReader();
             reader.onload = (e) => {
-                const data = JSON.parse(e.target.result);
+                const data = JSON.parse(e.target?.result?.toString() || '');
                 setFile(data);
                 setNewPages(data.pages);
                 setPagination({page: 0, pages: data.pages.length});
             }
-            reader.readAsText(file);
+            reader.readAsText(file as Blob);
         }
         input.click();
     }

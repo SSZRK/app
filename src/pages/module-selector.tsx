@@ -1,18 +1,15 @@
 import '../index.css';
-import useAuth from "../hooks/use-auth.ts";
 import {useEffect, useState} from "react";
 import Loading from "../components/common/loading.tsx";
 import {callApi, Method} from "../utils/call_api.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {getJwt, removeJwt} from "../utils/jwt.ts";
-import {Train, SignOut} from "@phosphor-icons/react";
 import {listen} from "@tauri-apps/api/event";
 
 export default function ModuleSelector() {
     const navigate = useNavigate();
     const {projectId} = useParams();
-    const {auth, setAuth} = useAuth();
-    const [jwt, setJwt] = useState<string>('');
+    const [jwt, setJwt] = useState<string | null>('');
 
     const [loading, setLoading] = useState(true);
     const [isUserLogged, setIsUserLogged] = useState(true);
@@ -62,7 +59,7 @@ export default function ModuleSelector() {
 
     const handleVerificationSend = async () => {
         setLoading(true);
-        const response = await callApi('/auth/send-email-verification', {
+        await callApi('/auth/send-email-verification', {
             token: jwt,
         }, Method.POST);
         setLoading(false);

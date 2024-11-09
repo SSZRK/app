@@ -1,3 +1,5 @@
+import {DocumentEditorFile} from "./types.ts";
+
 export const createFileByType = (type: string) => {
     switch (type) {
         case 'mileage-book':
@@ -34,7 +36,7 @@ export const createFileByType = (type: string) => {
                         };
                     })
                 ],
-            };
+            } as DocumentEditorFile;
         case 'announcement-post-movement-log':
             return {
                 type: 'announcement-post-movement-log',
@@ -77,7 +79,7 @@ export const createFileByType = (type: string) => {
                         };
                     })
                 ],
-            };
+            } as DocumentEditorFile;
         default:
             return {};
     }

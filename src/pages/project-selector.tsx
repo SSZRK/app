@@ -3,10 +3,11 @@ import {FormEvent, useEffect, useState} from "react";
 import Loading from "../components/common/loading.tsx";
 import Alert, {AlertProps} from "../components/common/alert.tsx";
 import {callApi, Method} from "../utils/call_api.ts";
+import {Project} from "../utils/types.ts";
 
 export default function ProjectSelector() {
     const navigate = useNavigate();
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState<Array<Project>>([]);
     const [loading, setLoading] = useState(false);
     const [alertData, setAlertData] = useState<AlertProps | null>(null);
 
@@ -55,8 +56,8 @@ export default function ProjectSelector() {
         navigate(`/${selectedProject}/login`);
     }
 
-    const selectProject = (projectId) => {
-        const project = projects.find((project) => project.id === projectId);
+    const selectProject = (projectId: string) => {
+        const project = projects.find((project) => project.id === projectId) as Project;
         setSearch(project.name);
         setShowHints(false);
         setSelectedProject(projectId);
@@ -67,7 +68,7 @@ export default function ProjectSelector() {
         setShowHints(true);
     }
 
-    const searchProjects = (text) => {
+    const searchProjects = (text: string) => {
         setShowHints(true);
         setSearch(text);
     }
@@ -96,11 +97,11 @@ export default function ProjectSelector() {
                             className={`absolute w-full max-w-80 max-h-52 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg ${showHints ? '' : 'hidden'}`}>
                             {projects.length === 0 &&
                                 <div className="p-2"><p className="text-sm text-gray-700">Brak wyników</p></div>}
-                            {projects.map((project) => {
+                            {projects.map((project: Project) => {
                                 if (project.name.toLowerCase().includes(search.toLowerCase()))
                                     return <div className="p-2 cursor-pointer" onClick={() => selectProject(project.id)}
                                                 key={project.id}>
-                                        <p className="text-sm text-gray-700">{project.name ?? ''}</p>
+                                        <p className="text-sm text-gray-700">{project.name}</p>
                                     </div>;
                             })}
                         </div>
