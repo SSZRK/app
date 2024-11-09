@@ -51,6 +51,9 @@ export default function About() {
                         <h4 className="text-xl text-gray-900 font-bold">Changelog</h4>
                         <div className="relative px-4">
                             <div className="absolute h-full border border-dashed border-opacity-20 border-black"/>
+                            <ChangelogElement title="Kolejne wydanie tego dnia" description={[
+                                "Dodano automatyczne aktualizacje i ekran ładowania.",
+                            ]} date="09.11.2024"/>
                             <ChangelogElement title="Pierwsze testowe wydanie" description={[
                                 "Utworzono podstawowy interfejs graficzny i podstawowe funkcje.",
                             ]} date="09.11.2024"/>
