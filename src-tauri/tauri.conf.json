@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "sszrk",
-  "identifier": "com.tauri.dev",
+  "identifier": "pl.sszrk.app",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
