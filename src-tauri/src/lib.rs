@@ -19,6 +19,7 @@ pub fn run() {
                 .text("save", "Save")
                 .text("go-to", "Idź do")
                 .text("admin", "Panel administracyjny")
+                .text("update", "Sprawdź aktualizacje")
                 .text("quit", "Zamknij")
                 .build()?;
 
@@ -35,6 +36,12 @@ pub fn run() {
                         app_handle
                             .emit("open-admin", "")
                             .expect("failed to emit event");
+                    }
+                    "update" => {
+                        let handle = app_handle.clone();
+                        tauri::async_runtime::spawn(async move {
+                            update(handle).await.unwrap();
+                        });
                     }
                     "quit" => {
                         let answer = app_handle
