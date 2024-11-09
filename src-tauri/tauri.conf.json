@@ -1,6 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "sszrk",
+  "version": "0.0.1",
   "identifier": "pl.sszrk.app",
   "build": {
     "frontendDist": "../dist",
@@ -41,7 +42,7 @@
         "installMode": "passive"
       },
       "endpoints": [
-        "https://github.com/user/repo/releases/latest/download/latest.json"
+        "https://github.com/SSZRK/app/releases/latest/download/latest.json"
       ]
     }
   }
