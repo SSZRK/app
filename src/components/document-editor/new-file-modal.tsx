@@ -1,10 +1,17 @@
 import {useState} from "react";
 
-export default function NewFileModal({
-                                         show = false, onClose = () => {
-    }, create = (a) => {
-    }
-                                     }) {
+type Props = {
+    show?: boolean;
+    onClose: () => void;
+    create: (type: string) => void;
+};
+
+type FileType = {
+    id: string;
+    name: string;
+};
+
+export default function NewFileModal({show = false, onClose, create}: Props) {
     const [type, setType] = useState('');
     const [search, setSearch] = useState('');
     const [showHints, setShowHints] = useState(false);
@@ -12,20 +19,20 @@ export default function NewFileModal({
     const types = [
         {id: 'mileage-book', name: 'Książka przebiegów'},
         {id: 'announcement-post-movement-log', name: 'Dziennik ruchu post. zapowiadawczego'},
-    ];
+    ] as Array<FileType>;
 
     const openHints = async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
         setShowHints(true);
     }
 
-    const searchTypes = (text) => {
+    const searchTypes = (text: string) => {
         setShowHints(true);
         setSearch(text);
     }
 
-    const selectType = (typeId) => {
-        const type = types.find((type) => type.id === typeId);
+    const selectType = (typeId: string) => {
+        const type = types.find((type) => type.id === typeId) as FileType;
         setSearch(type.name);
         setShowHints(false);
         setType(typeId);

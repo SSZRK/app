@@ -1,21 +1,21 @@
 import {useEffect, useState} from "react";
-import {useNavigate, useOutlet, useOutletContext, useParams} from "react-router-dom";
+import {useOutletContext, useParams} from "react-router-dom";
 import {callApi, Method} from "../../utils/call_api.ts";
-import {Item, Menu, Submenu, useContextMenu} from "react-contexify";
+import {Item, ItemParams, Menu, Submenu, TriggerEvent, useContextMenu} from "react-contexify";
 import "react-contexify/dist/ReactContexify.css";
 import Alert, {AlertProps} from "../../components/common/alert.tsx";
+import {AdminOutletContextType, User} from "../../utils/types.ts";
 
 export default function UsersAdmin() {
     const MENU_ID = 'admin-users-menu';
-    const {jwt} = useOutletContext();
+    const {jwt} = useOutletContext<AdminOutletContextType>();
     const {projectId} = useParams();
-    const navigate = useNavigate();
 
     const {show} = useContextMenu({
         id: MENU_ID
     });
 
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<Array<User>>([]);
 
     const [loading, setLoading] = useState(true);
     const [alertData, setAlertData] = useState<AlertProps | null>(null);
@@ -49,7 +49,7 @@ export default function UsersAdmin() {
         setLoading(false);
     }
 
-    const handleContextMenu = (e, id) => {
+    const handleContextMenu = (e: TriggerEvent, id: string) => {
         show({
             event: e,
             props: {
@@ -58,14 +58,13 @@ export default function UsersAdmin() {
         });
     }
 
-    const handleRoleChange = async ({id, props, data, triggerEvent}) => {
-        console.log(props, data);
+    const handleRoleChange = async (params: ItemParams<any, any>) => {
         setLoading(true);
         const response = await callApi('/admin/change-role', {
             jwt,
             projectId,
-            userId: props.id,
-            role: data.changeTo,
+            userId: params.props.id,
+            role: params.data.changeTo,
         }, Method.POST);
         setLoading(false);
 
@@ -79,9 +78,9 @@ export default function UsersAdmin() {
         await fetchUsers();
     }
 
-    const handleMessageSend = async ({id, props, data, triggerEvent}) => {
+    const handleMessageSend = async (params: ItemParams<any, any>) => {
         setSendMessagePopup(true);
-        setSelectedUser(props.id);
+        setSelectedUser(params.props.id);
     }
 
     const sendMessage = async () => {
@@ -90,7 +89,7 @@ export default function UsersAdmin() {
             jwt,
             projectId,
             message,
-            userEmail: users.find(user => user.id === selectedUser).email,
+            userEmail: users.find(user => user.id === selectedUser)?.email,
         }, Method.POST);
         setLoading(false);
 
@@ -183,7 +182,7 @@ export default function UsersAdmin() {
                             <tbody>
                             {
                                 users.map((user, index) => (
-                                    <tr key={user.id} onClick={(e) => handleContextMenu(e, user.id)}
+                                    <tr key={user.id} onClick={(e) => handleContextMenu(e, user.id ?? '')}
                                         className={`border-b ${index % 2 == 0 ? 'bg-gray-100' : 'bg-white'}`}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.username}</td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
@@ -199,7 +198,7 @@ export default function UsersAdmin() {
                                             {user.verificationField2}
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            {new Date(user.createdAt).toLocaleString()}
+                                            {new Date(user.createdAt as EpochTimeStamp).toLocaleString()}
                                         </td>
                                     </tr>
                                 ))

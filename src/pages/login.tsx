@@ -1,17 +1,14 @@
-import {useSearchParams, useParams, useNavigate} from "react-router-dom";
-import {FormEvent, useContext, useState} from "react";
+import {useParams, useNavigate} from "react-router-dom";
+import {FormEvent, useState} from "react";
 import {callApi, Method} from "../utils/call_api.ts";
 import Alert, {AlertProps} from "../components/common/alert.tsx";
-import useAuth from "../hooks/use-auth.ts";
 import Loading from "../components/common/loading.tsx";
 import {decodeJwt, saveJwt} from "../utils/jwt.ts";
 
 export default function Login() {
     const navigate = useNavigate();
-    const {auth, setAuth} = useAuth();
     const {projectId} = useParams();
-
-    const [searchParams, setSearchParams] = useSearchParams();
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);

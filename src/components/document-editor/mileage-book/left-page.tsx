@@ -3,12 +3,13 @@ import Handwritten from "../handwritten.tsx";
 import {useEffect} from "react";
 import HandwrittenArea from "../handwritten-area.tsx";
 
-export default function MileageBookLeftPage({
-                                                data, pageIndex, updatePage = (index, data) => {
-    }
-                                            }) {
+type Props = {
+    data: any;
+    pageIndex: number;
+    updatePage: (index: number, data: any) => void;
+}
 
-
+export default function MileageBookLeftPage({data, pageIndex, updatePage}: Props) {
     useEffect(() => {
         if (data.rows.length !== 21)
             updatePage(pageIndex, {
@@ -32,198 +33,30 @@ export default function MileageBookLeftPage({
                 })
             });
     }, [data]);
-    const handleTrainNumberChange = (e, index) => {
+    const handleRowChange = (field: string, value: any, index: number) => {
+        const rows = [...data.rows];
+        rows[index][field] = value;
         updatePage(pageIndex, {
             ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        trainNumber: e,
-                    }
-                }
-                return row;
-            })
+            rows: rows,
         });
     }
 
-    const handleFromChange = (e, index) => {
+    const handleWideText = (value: any, index: number) => {
+        const rows = [...data.rows];
+        rows[index].wide = value;
         updatePage(pageIndex, {
             ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        from: e,
-                    }
-                }
-                return row;
-            })
+            rows: rows,
         });
     }
 
-    const handleOnTrackChange = (e, index) => {
+    const handleCrossOut = (index: number) => {
+        const rows = [...data.rows];
+        rows[index].crossedOut = !rows[index].crossedOut;
         updatePage(pageIndex, {
             ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        onTrack: e,
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleArrivalInChange = (e, index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        arrivalIn: e,
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleArrivalTimeMinutesChange = (e, index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        arrivalTime: `${row.arrivalTime.split(':')[0]}:${e}`
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleArrivalTimeHoursChange = (e, index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        arrivalTime: `${e}:${row.arrivalTime.split(':')[1]}`
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleArrivalSignalMinutesChange = (e, index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        arrivalSignal: `${row.arrivalSignal.split(':')[0]}:${e}`
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleArrivalSignalHoursChange = (e, index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        arrivalSignal: `${e}:${row.arrivalSignal.split(':')[1]}`
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleRealArrivalMinutesChange = (e, index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        realArrival: `${row.realArrival.split(':')[0]}:${e}`
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleRealArrivalHoursChange = (e, index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        realArrival: `${e}:${row.realArrival.split(':')[1]}`
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleRemarksChange = (e, index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        remarks: e,
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleCrossOut = (index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        crossedOut: !row.crossedOut,
-                    }
-                }
-                return row;
-            })
-        });
-    }
-
-    const handleWideText = (e, index) => {
-        updatePage(pageIndex, {
-            ...data,
-            rows: data.rows.map((row, i) => {
-                if (i === index) {
-                    return {
-                        ...row,
-                        wide: e,
-                    }
-                }
-                return row;
-            })
+            rows: rows,
         });
     }
 
@@ -309,54 +142,55 @@ export default function MileageBookLeftPage({
                 </thead>
                 <tbody>
                 {
-                    data.rows.map((row, index) => {
+                    data.rows.map((row: any, index: number) => {
                         return <tr key={index} className="h-10 relative">
                             <td className="border border-black"><Handwritten text={row.trainNumber}
-                                                                             setText={(e) => handleTrainNumberChange(e, index)}
+                                                                             setText={(e) => handleRowChange('trainNumber', e, index)}
                                                                              width="5rem" align="center"/>
                             </td>
                             <td className="border border-black"><Handwritten text={row.from}
-                                                                             setText={(e) => handleFromChange(e, index)}
+                                                                             setText={(e) => handleRowChange('from', e, index)}
                                                                              width="5rem"
                                                                              align="center"/>
                             </td>
                             <td className="border border-black border-r-2"><Handwritten text={row.onTrack}
-                                                                                        setText={(e) => handleOnTrackChange(e, index)}
+                                                                                        setText={(e) => handleRowChange('onTrack', e, index)}
                                                                                         width="3.5rem"
                                                                                         align="center"/></td>
                             <td className="border border-black"><Handwritten text={row.arrivalIn}
-                                                                             setText={(e) => handleArrivalInChange(e, index)}
+                                                                             setText={(e) => handleRowChange('arrivalIn', e, index)}
                                                                              width="4rem" align="center"/>
                             </td>
                             <td className="border border-black"><Handwritten text={row.arrivalTime.split(':')[0]}
-                                                                             setText={(e) => handleArrivalTimeHoursChange(e, index)}
+                                                                             setText={(e) => handleRowChange('arrivalTime', e + ':' + row.arrivalTime.split(':')[1], index)}
                                                                              width="2.5rem" align="center"/>
                             </td>
                             <td className="border border-black border-r-2"><Handwritten
                                 text={row.arrivalTime.split(':')[1]}
-                                setText={(e) => handleArrivalTimeMinutesChange(e, index)} width="2.5rem"
+                                setText={(e) => handleRowChange('arrivalTime', row.arrivalTime.split(':')[0] + ':' + e, index)}
+                                width="2.5rem"
                                 align="center"/></td>
                             <td className="border border-black"><Handwritten text={row.arrivalSignal.split(':')[0]}
-                                                                             setText={(e) => handleArrivalSignalHoursChange(e, index)}
+                                                                             setText={(e) => handleRowChange('arrivalSignal', e + ':' + row.arrivalSignal.split(':')[1], index)}
                                                                              width="2.5rem" align="center"/>
                             </td>
 
                             <td className="border border-black border-r-2"><Handwritten
                                 text={row.arrivalSignal.split(':')[1]}
-                                setText={(e) => handleArrivalSignalMinutesChange(e, index)}
+                                setText={(e) => handleRowChange('arrivalSignal', row.arrivalSignal.split(':')[0] + ':' + e, index)}
                                 width="2.5rem"
                                 align="center"/></td>
                             <td className="border border-black"><Handwritten text={row.realArrival.split(':')[0]}
-                                                                             setText={(e) => handleRealArrivalHoursChange(e, index)}
+                                                                             setText={(e) => handleRowChange('realArrival', e + ':' + row.realArrival.split(':')[1], index)}
                                                                              width="2.5rem" align="center"/>
                             </td>
                             <td className="border border-black border-r-2"><Handwritten
                                 text={row.realArrival.split(':')[1]}
-                                setText={(e) => handleRealArrivalMinutesChange(e, index)}
+                                setText={(e) => handleRowChange('realArrival', row.realArrival.split(':')[0] + ':' + e, index)}
                                 width="2.5rem" height="full"
                                 align="center"/></td>
                             <td className="border border-black"><Handwritten text={row.remarks}
-                                                                             setText={(e) => handleRemarksChange(e, index)}
+                                                                             setText={(e) => handleRowChange('remarks', e, index)}
                                                                              align="center"/>
                             </td>
                             {<div className="absolute flex flex-row h-10 left-[-44px] opacity-0 hover:opacity-100">

@@ -1,4 +1,4 @@
-import {useNavigate, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 export default function About() {
 
@@ -9,11 +9,12 @@ export default function About() {
                     <img src="/assets/tory.webp" className="w-full h-full object-cover rounded-tl-lg rounded-tr-lg"/>
                 </div>
                 <div className="flex flex-col items-center -mt-20">
-                    <Link to="/" > <img src="/assets/icons/icon-full.webp" className="w-40"/></Link>
+                    <Link to="/"> <img src="/assets/icons/icon-full.webp" className="w-40"/></Link>
                     <div className="flex items-center space-x-2 mt-2">
                         <p className="text-2xl">Symulacyjny System Zarządzania Ruchem Kolejowym</p>
                     </div>
-                    <p className="text-gray-700">Copyright © { new Date().getFullYear() }</p>
+                    <p className="text-gray-700">Copyright © {new Date().getFullYear()}</p>
+                    <p className="text-gray-500">Wersja {import.meta.env.VITE_APP_VERSION}</p>
                 </div>
             </div>
 
@@ -41,7 +42,7 @@ export default function About() {
                             </li>
                             <li className="flex border-b py-2">
                                 <span className="font-bold w-40">Materiały źródłowe</span>
-                                <span className="text-gray-700">smoczysko12, Marcin</span>
+                                <span className="text-gray-700">Marcin, smoczysko12</span>
                             </li>
                         </ul>
                     </div>
@@ -49,13 +50,10 @@ export default function About() {
                     <div className="flex-1 bg-white rounded-lg shadow-xl mt-4 p-8">
                         <h4 className="text-xl text-gray-900 font-bold">Changelog</h4>
                         <div className="relative px-4">
-                            <div className="absolute h-full border border-dashed border-opacity-20 border-secondary" />
-                            <ChangelogElement title="Dodano:" description="Ekrany SIP na stacji" date="25.04.2024"/>
-                            <ChangelogElement title="Dodano:" description="Moduły SIP" date="24.04.2024"/>
-                            <ChangelogElement title="Dodano:" description="Regulamin" date="21.04.2024"/>
-                            <ChangelogElement title="Zaktualizowano:" description="Generator rozkładów jazdy" date="21.04.2024"/>
-                            <ChangelogElement title="Dodano:" description="Ekran SWDR" date="03.01.2024"/>
-                            <ChangelogElement title="Dodano:" description="Logowanie i rejestrację" date="01.01.2024"/>
+                            <div className="absolute h-full border border-dashed border-opacity-20 border-black"/>
+                            <ChangelogElement title="Pierwsze testowe wydanie" description={[
+                                "Utworzono podstawowy interfejs graficzny i podstawowe funkcje.",
+                            ]} date="09.11.2024"/>
                         </div>
                     </div>
                 </div>
@@ -64,18 +62,22 @@ export default function About() {
     );
 }
 
-function ChangelogElement(props) {
-    const {title, description, date} = props;
+type ChangelogElementProps = {
+    title: string;
+    description: Array<string>;
+    date: string;
+};
 
+function ChangelogElement({title, description, date}: ChangelogElementProps) {
     return (
         <div className="flex items-center w-full my-6 -ml-1.5">
             <div className="w-1/12 z-10">
-                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
+                <div className="w-3.5 h-3.5 bg-red-600 rounded-full"></div>
             </div>
             <div className="w-11/12">
                 <p className="text-md text-gray-800 font-bold">{title}</p>
-                <p className="text-sm text-gray-600">{description}</p>
-                <p className="text-xs text-gray-300 ">{date}</p>
+                <p className="text-sm text-gray-700">{description.map(element => <>{element}<br/></>)}</p>
+                <p className="text-xs text-gray-400">{date}</p>
             </div>
         </div>
     );

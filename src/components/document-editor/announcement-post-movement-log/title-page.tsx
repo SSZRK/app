@@ -1,15 +1,16 @@
 import HandwrittenUnderline from "../handwritten-underline.tsx";
 import A4Template from "../a4-template.tsx";
-import {useState} from "react";
-import AnnouncementPostMovementLogPagesSwitch from "./pages-switch.tsx";
 
-export default function AnnouncementPostMovementLogTitlePage({
-                                                                 data, pageIndex, updatePage = (index, data) => {
-    }
-                                                             }) {
+type Props = {
+    data: any;
+    pageIndex: number;
+    updatePage: (index: number, data: any) => void;
+};
+
+export default function AnnouncementPostMovementLogTitlePage({data, pageIndex, updatePage}: Props) {
 
 
-    const handleChange = (field, value) => {
+    const handleChange = (field: string, value: any) => {
         updatePage(pageIndex, {
             ...data,
             [field]: value,

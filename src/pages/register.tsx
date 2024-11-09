@@ -1,13 +1,10 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {FormEvent, useContext, useState} from "react";
+import {FormEvent, useState} from "react";
 import {callApi, Method} from "../utils/call_api.ts";
 import Alert, {AlertProps} from "../components/common/alert.tsx";
-import useAuth from "../hooks/use-auth.ts";
 import Loading from "../components/common/loading.tsx";
-import {decodeJwt, saveJwt} from "../utils/jwt.ts";
 
 export default function Register() {
-    const {auth, setAuth} = useAuth();
     const {projectId} = useParams();
     const navigate = useNavigate();
 

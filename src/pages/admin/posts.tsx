@@ -1,5 +1,3 @@
-import {Item, Menu, Submenu} from "react-contexify";
-import Alert from "../../components/common/alert.tsx";
 import {useState} from "react";
 import {useParams} from "react-router-dom";
 
@@ -60,7 +58,7 @@ export default function PostsAdmin() {
                                 <label htmlFor="type" className="block text-gray-700 text-sm font-semibold mb-2">Typ
                                     posterunku</label>
                                 <select id="type" value={editingPost?.type}
-                                        onSelect={(e) => setEditingPostField('type', e.target.value)}
+                                        onChange={(e) => setEditingPostField('type', e.target.value)}
                                         defaultValue=""
                                         className="form-input w-full px-4 py-2 border border-gray-400 rounded-lg text-gray-700 focus:ring-blue-500">
                                     <option disabled value="">Wybierz typ</option>
