@@ -6,6 +6,15 @@ import "react-contexify/dist/ReactContexify.css";
 import Alert, {AlertProps} from "../../components/common/alert.tsx";
 import {AdminOutletContextType, User} from "../../utils/types.ts";
 
+export const userRoles = [
+    {value: 'not-verified', label: 'Niezweryfikowany'},
+    {value: 'banned', label: 'Zbanowany'},
+    {value: 'user', label: 'Użytkownik'},
+    {value: 'trainDriver', label: 'Maszynista'},
+    {value: 'dispatcher', label: 'Dyżurny ruchu'},
+    {value: 'admin', label: 'Administrator'},
+];
+
 export default function UsersAdmin() {
     const MENU_ID = 'admin-users-menu';
     const {jwt} = useOutletContext<AdminOutletContextType>();
@@ -29,7 +38,6 @@ export default function UsersAdmin() {
     }, [jwt]);
     const fetchUsers = async () => {
         if (!jwt) return
-
         setLoading(true);
         const response = await callApi('/admin/get-users', {
             jwt,
@@ -126,9 +134,13 @@ export default function UsersAdmin() {
         <div className="flex flex-col">
             <Menu id={MENU_ID}>
                 <Submenu label="Zmień rolę">
-                    <Item onClick={handleRoleChange} data={{changeTo: 'user'}}>Użytkownik</Item>
-                    <Item onClick={handleRoleChange} data={{changeTo: 'dispatcher'}}>Dyżurny ruchu</Item>
-                    <Item onClick={handleRoleChange} data={{changeTo: 'admin'}}>Administrator</Item>
+                    {
+                        userRoles.map(role => {
+                            if (role.value === 'not-verified' || role.value === 'banned') return;
+                            return <Item key={role.value} onClick={handleRoleChange}
+                                         data={{changeTo: role.value}}>{role.label}</Item>
+                        })
+                    }
                 </Submenu>
                 <Item>Zbanuj użytkownika</Item>
                 <Item onClick={handleMessageSend}>Wyślij wiadomość</Item>
@@ -189,7 +201,7 @@ export default function UsersAdmin() {
                                             {user.email}
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            {user.role}
+                                            {userRoles.find(role => role.value === user.role)?.label}
                                         </td>
                                         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                             {user.verificationField1}

@@ -75,6 +75,10 @@ export default function Admin() {
                            href={`/${projectId}/admin/posts`}>
                             Posterunki
                         </a>
+                        <a className="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-cyan-300 hover:text-white"
+                           href={`/${projectId}/admin/project`}>
+                            Projekt
+                        </a>
                     </nav>
 
                     <a className="block text-gray-500 py-2.5 px-4 my-2 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-cyan-300 hover:text-white mt-auto"
