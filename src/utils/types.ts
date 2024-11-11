@@ -11,6 +11,9 @@ export type User = {
 export type Project = {
     id: string;
     name: string;
+    lastAccident?: number;
+    createdAt?: number;
+    isEmailVerificationRequired?: boolean;
 }
 
 export type AdminOutletContextType = {

@@ -90,7 +90,7 @@ export default function ProjectSelector() {
                     <div className="mb-6">
                         <label htmlFor="select"
                                className="block text-gray-700 text-sm font-semibold mb-2"></label>
-                        <input id="select" onFocus={() => openHints()}
+                        <input id="select" onFocus={() => openHints()} autoComplete="off"
                                value={search} onChange={(e) => searchProjects(e.target.value)}
                                className="form-input w-full px-4 py-2 border rounded-lg text-gray-700 border-gray-300 focus:ring-blue-500"/>
                         <div

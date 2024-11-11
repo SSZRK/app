@@ -1,4 +1,3 @@
-import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import './index.css'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
@@ -15,6 +14,7 @@ import VerifyEmail from "./pages/verify-email.tsx";
 import Admin from "./pages/admin/admin.tsx";
 import UsersAdmin from "./pages/admin/users.tsx";
 import PostsAdmin from "./pages/admin/posts.tsx";
+import ProjectAdmin from "./pages/admin/project.tsx";
 
 const router = createBrowserRouter([
     {
@@ -73,6 +73,10 @@ const router = createBrowserRouter([
                         path: 'posts',
                         element: <PostsAdmin/>,
                     },
+                    {
+                        path: 'project',
+                        element: <ProjectAdmin/>,
+                    },
                 ],
             },
         ],
@@ -84,10 +88,7 @@ if (import.meta.env.NODE_ENV === 'production') {
 }
 
 createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-
-        <RouterProvider router={router}/>
-    </StrictMode>
+    <RouterProvider router={router}/>
 )
 
 declare global {
