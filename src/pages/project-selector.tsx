@@ -77,8 +77,9 @@ export default function ProjectSelector() {
                         dalej
                     </button>
                     <p className="text-gray-600 text-xs text-center mt-4">
-                        Przechodząc dalej akceptujesz <a href="#"
-                                                         className="text-blue-500 hover:underline">Regulamin</a>.
+                        Przechodząc dalej akceptujesz <a href="/docs/terms-of-service/pl"
+                            className="text-blue-500 hover:underline">Warunki korzystania</a> i <a href="/docs/privacy-policy/pl"
+                                className="text-blue-500 hover:underline">Politykę prywatności</a>.
                     </p>
                 </form>
             </div>

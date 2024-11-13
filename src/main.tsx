@@ -15,6 +15,8 @@ import Admin from "./pages/admin/admin.tsx";
 import UsersAdmin from "./pages/admin/users.tsx";
 import PostsAdmin from "./pages/admin/posts.tsx";
 import ProjectAdmin from "./pages/admin/project.tsx";
+import TermsOfService from './pages/docs/terms-of-service.tsx';
+import PrivacyPolicy from './pages/docs/privacy-policy.tsx';
 
 const router = createBrowserRouter([
     {
@@ -80,7 +82,20 @@ const router = createBrowserRouter([
                 ],
             },
         ],
-    }
+    },
+    {
+        path: '/docs',
+        children: [
+            {
+                path: 'terms-of-service/:language',
+                element: <TermsOfService/>,
+            },
+            {
+                path: 'privacy-policy/:language',
+                element: <PrivacyPolicy/>,
+            },
+        ],
+    },
 ]);
 
 if (import.meta.env.NODE_ENV === 'production') {
