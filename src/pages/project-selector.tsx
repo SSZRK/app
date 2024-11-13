@@ -5,6 +5,7 @@ import Alert, { AlertProps } from "../components/common/alert.tsx";
 import { callApi, Method } from "../utils/call_api.ts";
 import { Project } from "../utils/types.ts";
 import DropdownSearch from "../components/common/dropdown-search.tsx";
+import { openInNewTabOrNewWindow } from "../utils/tauri.ts";
 
 export default function ProjectSelector() {
     const navigate = useNavigate();
@@ -63,7 +64,7 @@ export default function ProjectSelector() {
             className="bg-gray-100 bg-[url(../public/Przejazd.webp)] flex items-center select-none justify-center h-screen">
             <Loading enabled={loading} />
             <Alert alertData={alertData} closeNotification={() => closeNotification()} />
-            <a href="/about"
+            <a onClick={() => openInNewTabOrNewWindow({window, url: '/about'})}
                 className="flex absolute right-0 bottom-0 h-32 m-5 opacity-50 hover:opacity-80 transition-opacity duration-100">
                 <img src="/icon-full.png" alt="logo" />
             </a>
