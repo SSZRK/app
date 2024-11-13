@@ -81,7 +81,7 @@ export default function ModuleSelector() {
     if (!isUserLogged)
         return (
             <div
-                className="bg-gray-100 bg-[url(../public/Przejazd.webp)] flex items-center justify-center select-none h-screen">
+                className="bg-gray-100 bg-[url(../public/Przejazd.webp)] bg-scroll bg-cover bg-no-repeat bg-center flex items-center justify-center select-none h-screen">
                 <a href="/about"
                    className="flex absolute right-0 bottom-0 h-32 m-5 opacity-50 hover:opacity-80 transition-opacity duration-100">
                     <img src="/icon-full.png" alt="logo"/>

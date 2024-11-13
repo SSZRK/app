@@ -17,6 +17,7 @@ import PostsAdmin from "./pages/admin/posts.tsx";
 import ProjectAdmin from "./pages/admin/project.tsx";
 import TermsOfService from './pages/docs/terms-of-service.tsx';
 import PrivacyPolicy from './pages/docs/privacy-policy.tsx';
+import DriverTimetable from './pages/driver/timetable.tsx';
 
 const router = createBrowserRouter([
     {
@@ -60,6 +61,15 @@ const router = createBrowserRouter([
                     {
                         path: 'serwo',
                         element: <Serwo/>,
+                    },
+                ],
+            },
+            {
+                path: 'driver',
+                children: [
+                    {
+                        path: 'timetable/:timetableId?',
+                        element: <DriverTimetable/>,
                     },
                 ],
             },
