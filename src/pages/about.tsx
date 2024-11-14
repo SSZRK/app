@@ -1,5 +1,3 @@
-import {Link} from 'react-router-dom';
-
 export default function About() {
 
     return (
@@ -52,13 +50,18 @@ export default function About() {
                         <h4 className="text-xl text-gray-900 font-bold">Changelog</h4>
                         <div className="relative px-4">
                             <div className="absolute h-full border border-dashed border-opacity-20 border-black"/>
+                            <ChangelogElement title="Wydanie 0.1.2" description={[
+                                "Naprawiono znalezione błędy.",
+                                "Dodano nowe funkcje w panelu administracyjnym.",
+                                "Poprawiono integrację z aplikacją.",
+                            ]} date="14.11.2024"/>
                             <ChangelogElement title="Wydanie 0.1.1" description={[
                                 "Dodano wiele nowych funkcji, takich jak zarządzanie użytkownikami, projektami i wiele innych.",
                             ]} date="11.11.2024"/>
-                            <ChangelogElement title="Kolejne wydanie tego dnia" description={[
+                            <ChangelogElement title="Wydanie 0.0.2" description={[
                                 "Dodano automatyczne aktualizacje i ekran ładowania.",
                             ]} date="09.11.2024"/>
-                            <ChangelogElement title="Pierwsze testowe wydanie" description={[
+                            <ChangelogElement title="Wydanie 0.0.1" description={[
                                 "Utworzono podstawowy interfejs graficzny i podstawowe funkcje.",
                             ]} date="09.11.2024"/>
                         </div>

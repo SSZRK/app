@@ -72,6 +72,7 @@ export default function ProjectSelector() {
                 <form onSubmit={formSubmit}>
                     <DropdownSearch search={search} setSearch={setSearch} selectedElement={selectedProject}
                                     setElement={setSelectedProject} hints={projects}
+                                    maxWidth="320px"
                                     noElementsMessage="Nie znaleziono posterunków"/>
 
                     <button type="submit"

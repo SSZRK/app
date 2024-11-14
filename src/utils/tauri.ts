@@ -21,6 +21,7 @@ export const openInNewTabOrNewWindow = async ({
             ...windowOptions,
             url,
         } as WebviewOptions);
+        console.log(webviewWindow);
     } else {
         window
             .open(url, '_blank')

@@ -38,7 +38,7 @@ export default function Admin() {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-gray-100">
+        <div className="flex flex-col h-screen bg-gray-100 overflow-hidden">
             <Loading enabled={loading}/>
             <div className="bg-white text-white shadow z-10 w-full p-2 flex items-center justify-between">
                 <div className="flex items-center">
@@ -60,7 +60,7 @@ export default function Admin() {
                 </div>
             </div>
 
-            <div className="flex-1 flex">
+            <div className="flex-1 flex max-h-full overflow-hidden">
                 <div className="p-2 bg-white w-60 flex flex-col md:flex" id="sideNav">
                     <nav>
                         <a className="block text-gray-500 py-2.5 px-4 my-4 rounded transition duration-200 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-cyan-300 hover:text-white"
