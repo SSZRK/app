@@ -1,22 +1,26 @@
-import { Webview, WebviewOptions } from "@tauri-apps/api/webview";
-import { Window as TauriWindow } from "@tauri-apps/api/window";
+import {WebviewOptions} from "@tauri-apps/api/webview";
+import {WebviewWindow} from "@tauri-apps/api/webviewWindow";
 
-type OpenInNewTabOrNewWindowProps = {
+export type OpenInNewTabOrNewWindowProps = {
     window: Window;
+    windowLabel: string;
+    windowOptions?: WebviewOptions;
     url: string;
 };
 
-export const openInNewTabOrNewWindow = ({window, url}: OpenInNewTabOrNewWindowProps) => {
-    const isInApp = !!window.__TAURI__;
+export const openInNewTabOrNewWindow = async ({
+                                                  window,
+                                                  url,
+                                                  windowLabel,
+                                                  windowOptions
+                                              }: OpenInNewTabOrNewWindowProps) => {
+    const isInApp = !!window.__TAURI_INTERNALS__;
 
     if (isInApp) {
-        const appWindow = new TauriWindow('uniqueLabel');
-        const webview = new Webview(appWindow, 'theUniqueLabel', {
-            url: 'index.html',
-          } as WebviewOptions);
-          webview.once('tauri://created', function () {
-            console.log('Window opened');
-           });
+        const webviewWindow = await new WebviewWindow(windowLabel, {
+            ...windowOptions,
+            url,
+        } as WebviewOptions);
     } else {
         window
             .open(url, '_blank')

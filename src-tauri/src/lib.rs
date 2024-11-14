@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-use tauri::menu::{Menu, MenuBuilder, MenuItem, Submenu, SubmenuBuilder};
+use tauri::menu::{MenuBuilder, SubmenuBuilder};
 use tauri::{AppHandle, Emitter, Manager, State};
 use tauri::async_runtime::spawn;
 use tauri_plugin_dialog::{DialogExt, MessageDialogButtons};
@@ -51,18 +51,7 @@ pub fn run() {
                         });
                     }
                     "quit" => {
-                        let answer = app_handle
-                            .dialog()
-                            .message("Czy na pewno chcesz zamknąć aplikację?")
-                            .title("Zamknij aplikację")
-                            .buttons(MessageDialogButtons::OkCancelCustom(
-                                "Tak".to_string(),
-                                "Nie".to_string(),
-                            ))
-                            .blocking_show();
-                        if answer {
-                            app_handle.exit(0);
-                        }
+                        ask_quit(app_handle.clone());
                     }
                     _ => {
                         println!("unexpected menu event");
@@ -126,6 +115,13 @@ async fn set_complete(
         let main_window = app.get_webview_window("main").unwrap();
         splash_window.close().unwrap();
         main_window.show().unwrap();
+        main_window.on_window_event(move |event| match event {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+                api.prevent_close();
+                ask_quit(app.clone());
+            }
+            _ => {}
+        });
     }
     Ok(())
 }
@@ -147,4 +143,19 @@ async fn setup(app: AppHandle) -> Result<(), ()> {
     )
         .await?;
     Ok(())
+}
+
+fn ask_quit(app_handle: AppHandle) {
+    let answer = app_handle
+        .dialog()
+        .message("Czy na pewno chcesz zamknąć aplikację?")
+        .title("Zamknij aplikację")
+        .buttons(MessageDialogButtons::OkCancelCustom(
+            "Tak".to_string(),
+            "Nie".to_string(),
+        ))
+        .blocking_show();
+    if answer {
+        app_handle.exit(0);
+    }
 }

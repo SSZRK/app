@@ -1,11 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import { FormEvent, useEffect, useState } from "react";
+import {useNavigate} from "react-router-dom";
+import {FormEvent, useEffect, useState} from "react";
 import Loading from "../components/common/loading.tsx";
-import Alert, { AlertProps } from "../components/common/alert.tsx";
-import { callApi, Method } from "../utils/call_api.ts";
-import { Project } from "../utils/types.ts";
+import Alert, {AlertProps} from "../components/common/alert.tsx";
+import {callApi, Method} from "../utils/call_api.ts";
+import {Project} from "../utils/types.ts";
 import DropdownSearch from "../components/common/dropdown-search.tsx";
-import { openInNewTabOrNewWindow } from "../utils/tauri.ts";
+import AboutCap from "../components/common/about-cap.tsx";
+import {openInNewTabOrNewWindow, OpenInNewTabOrNewWindowProps} from "../utils/tauri.ts";
+import {Window as TauriWindow, WindowOptions} from "@tauri-apps/api/window";
 
 export default function ProjectSelector() {
     const navigate = useNavigate();
@@ -62,25 +64,53 @@ export default function ProjectSelector() {
     return (
         <div
             className="bg-gray-100 bg-[url(../public/Przejazd.webp)] flex items-center select-none justify-center h-screen">
-            <Loading enabled={loading} />
-            <Alert alertData={alertData} closeNotification={() => closeNotification()} />
-            <a onClick={() => openInNewTabOrNewWindow({window, url: '/about'})}
-                className="flex absolute right-0 bottom-0 h-32 m-5 opacity-50 hover:opacity-80 transition-opacity duration-100">
-                <img src="/icon-full.png" alt="logo" />
-            </a>
+            <Loading enabled={loading}/>
+            <Alert alertData={alertData} closeNotification={() => closeNotification()}/>
+            <AboutCap/>
             <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
                 <h2 className="text-2xl font-semibold text-center mb-4">Wybierz projekt</h2>
                 <form onSubmit={formSubmit}>
-                    <DropdownSearch search={search} setSearch={setSearch} selectedElement={selectedProject} setElement={setSelectedProject} hints={projects} noElementsMessage="Nie znaleziono posterunków" />
+                    <DropdownSearch search={search} setSearch={setSearch} selectedElement={selectedProject}
+                                    setElement={setSelectedProject} hints={projects}
+                                    noElementsMessage="Nie znaleziono posterunków"/>
 
                     <button type="submit"
-                        className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Przejdź
+                            className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Przejdź
                         dalej
                     </button>
                     <p className="text-gray-600 text-xs text-center mt-4">
-                        Przechodząc dalej akceptujesz <a href="/docs/terms-of-service/pl"
-                            className="text-blue-500 hover:underline">Warunki korzystania</a> i <a href="/docs/privacy-policy/pl"
-                                className="text-blue-500 hover:underline">Politykę prywatności</a>.
+                        Przechodząc dalej akceptujesz <a
+                        onClick={() => openInNewTabOrNewWindow({
+                            window, url: '/docs/terms-of-service/pl',
+                            windowLabel: 'terms-of-service',
+                            windowOptions: {
+                                title: 'Warunki korzystania',
+                                center: true,
+                                focus: true,
+                                alwaysOnTop: true,
+                                minimizable: false,
+                                height: 700,
+                                width: 800,
+                                parent: TauriWindow.getCurrent(),
+                            } as WindowOptions
+                        } as OpenInNewTabOrNewWindowProps)}
+                        className="text-blue-500 hover:underline">Warunki
+                        korzystania</a> i <a
+                        onClick={() => openInNewTabOrNewWindow({
+                            window, url: '/docs/privacy-policy/pl',
+                            windowLabel: 'privacy-policy',
+                            windowOptions: {
+                                title: 'Polityka prywatności',
+                                center: true,
+                                focus: true,
+                                alwaysOnTop: true,
+                                minimizable: false,
+                                height: 700,
+                                width: 800,
+                                parent: TauriWindow.getCurrent(),
+                            } as WindowOptions
+                        } as OpenInNewTabOrNewWindowProps)}
+                        className="text-blue-500 hover:underline">Politykę prywatności</a>.
                     </p>
                 </form>
             </div>

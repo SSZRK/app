@@ -5,6 +5,7 @@ import {callApi, Method} from "../utils/call_api.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {getJwt, removeJwt} from "../utils/jwt.ts";
 import {listen} from "@tauri-apps/api/event";
+import AboutCap from "../components/common/about-cap.tsx";
 
 export default function ModuleSelector() {
     const navigate = useNavigate();
@@ -82,10 +83,7 @@ export default function ModuleSelector() {
         return (
             <div
                 className="bg-gray-100 bg-[url(../public/Przejazd.webp)] bg-scroll bg-cover bg-no-repeat bg-center flex items-center justify-center select-none h-screen">
-                <a href="/about"
-                   className="flex absolute right-0 bottom-0 h-32 m-5 opacity-50 hover:opacity-80 transition-opacity duration-100">
-                    <img src="/icon-full.png" alt="logo"/>
-                </a>
+                <AboutCap/>
                 <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
                     <h2 className="text-2xl font-semibold text-center mb-2">Nie jesteś zalogowany</h2>
                     <p className="text-center text-sm text-gray-500 mb-4">Aby wyświetlić tę stronę musisz się

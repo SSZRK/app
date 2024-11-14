@@ -6,10 +6,11 @@ export default function About() {
         <div className="h-full bg-gray-200 p-8">
             <div className="bg-white rounded-lg shadow-xl pb-8">
                 <div className="w-full h-[250px]">
-                    <img src="/assets/tory.webp" className="w-full h-full object-cover rounded-tl-lg rounded-tr-lg"/>
+                    <img src="/assets/tory.webp" alt="background"
+                         className="w-full h-full object-cover rounded-tl-lg rounded-tr-lg"/>
                 </div>
                 <div className="flex flex-col items-center -mt-20">
-                    <Link to="/"> <img src="/assets/icons/icon-full.webp" className="w-40"/></Link>
+                    <img src="/assets/icons/icon-full.webp" alt="logo" className="w-40"/>
                     <div className="flex items-center space-x-2 mt-2">
                         <p className="text-2xl">Symulacyjny System Zarządzania Ruchem Kolejowym</p>
                     </div>
