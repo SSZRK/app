@@ -15,6 +15,9 @@ import Admin from "./pages/admin/admin.tsx";
 import UsersAdmin from "./pages/admin/users.tsx";
 import PostsAdmin from "./pages/admin/posts.tsx";
 import ProjectAdmin from "./pages/admin/project.tsx";
+import TermsOfService from './pages/docs/terms-of-service.tsx';
+import PrivacyPolicy from './pages/docs/privacy-policy.tsx';
+import DriverTimetable from './pages/driver/timetable.tsx';
 
 const router = createBrowserRouter([
     {
@@ -62,6 +65,15 @@ const router = createBrowserRouter([
                 ],
             },
             {
+                path: 'driver',
+                children: [
+                    {
+                        path: 'timetable/:timetableId?',
+                        element: <DriverTimetable/>,
+                    },
+                ],
+            },
+            {
                 path: 'admin',
                 element: <Admin/>,
                 children: [
@@ -80,7 +92,20 @@ const router = createBrowserRouter([
                 ],
             },
         ],
-    }
+    },
+    {
+        path: '/docs',
+        children: [
+            {
+                path: 'terms-of-service/:language',
+                element: <TermsOfService/>,
+            },
+            {
+                path: 'privacy-policy/:language',
+                element: <PrivacyPolicy/>,
+            },
+        ],
+    },
 ]);
 
 if (import.meta.env.NODE_ENV === 'production') {
@@ -94,5 +119,6 @@ createRoot(document.getElementById('root')!).render(
 declare global {
     interface Window {
         __TAURI__: Record<string, unknown>;
+        __TAURI_INTERNALS__: Record<string, unknown>;
     }
 }

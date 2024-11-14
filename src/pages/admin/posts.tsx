@@ -4,6 +4,7 @@ import {callApi, Method} from "../../utils/call_api.ts";
 import {AdminOutletContextType} from "../../utils/types.ts";
 import {Item, ItemParams, Menu, TriggerEvent, useContextMenu} from "react-contexify";
 import Alert, {AlertProps} from "../../components/common/alert.tsx";
+import DropdownSearch, {DropdownHint} from "../../components/common/dropdown-search.tsx";
 
 export const postTypes = [
     {value: 'bst', label: 'BST - Bocznica stacyjna'},
@@ -69,6 +70,7 @@ export default function PostsAdmin() {
     const [posts, setPosts] = useState<PostData[]>([]);
     const [postDataPopup, setPostDataPopup] = useState(false);
     const [editingPost, setEditingPost] = useState<PostData | null>(null);
+    const [superiorPostSearch, setSuperiorPostSearch] = useState('');
 
     const {show} = useContextMenu({
         id: MENU_ID
@@ -92,6 +94,36 @@ export default function PostsAdmin() {
         if (!post) return;
         setEditingPost(post);
         setPostDataPopup(true);
+    }
+
+    const handleDeletePost = async (e: ItemParams) => {
+        setLoading(true);
+        const response = await callApi('/admin/posts/delete', {
+            jwt,
+            projectId,
+            postId: e.props.id,
+        }, Method.POST);
+        setLoading(false);
+
+        if (response.data.error) {
+            console.log(response.data.error);
+            setAlertData({
+                title: 'Błąd',
+                message: 'Wystąpił błąd podczas usuwania posterunku',
+                type: 'error',
+            });
+            return;
+        }
+
+        setAlertData({
+            title: 'Sukces',
+            message: 'Posterunek został usunięty',
+            type: 'success',
+        });
+        let _posts = [...posts];
+        _posts = _posts.filter(p => p.id !== e.props.id);
+        _posts.sort((a, b) => a.fullName?.toLowerCase() ?? '' > (b.fullName?.toLowerCase() ?? '') ? 1 : -1);
+        setPosts(_posts);
     }
 
     useEffect(() => {
@@ -151,7 +183,7 @@ export default function PostsAdmin() {
 
         if (!editingPost?.id) {
             setLoading(true);
-            const response = await callApi('/admin/posts/new-post', {
+            const response = await callApi('/admin/posts/create', {
                 jwt,
                 ...editingPost,
             }, Method.POST);
@@ -174,12 +206,12 @@ export default function PostsAdmin() {
             });
             setPostDataPopup(false);
             setEditingPost(null);
-            let _posts = [...posts, editingPost];
+            let _posts = [...posts, response.data.data];
             _posts.sort((a, b) => a.fullName?.toLowerCase() ?? '' > (b.fullName?.toLowerCase() ?? '') ? 1 : -1);
             setPosts(_posts);
         } else {
             setLoading(true);
-            const response = await callApi('/admin/posts/update-post', {
+            const response = await callApi('/admin/posts/update', {
                 jwt,
                 ...editingPost,
             }, Method.POST);
@@ -219,16 +251,17 @@ export default function PostsAdmin() {
         );
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full">
             <div className="absolute w-full left-0 top-14">
                 <Alert alertData={alertData} closeNotification={closeNotification}/>
             </div>
             <Menu id={MENU_ID}>
                 <Item onClick={handleCopyId}>Skopiuj ID</Item>
                 <Item onClick={handleEditData}>Edytuj dane</Item>
+                <Item onClick={handleDeletePost}>Usuń posterunek</Item>
             </Menu>
             {postDataPopup && (
-                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 py-20 flex items-center justify-center">
+                <div className="fixed inset-0 bg-gray-900 z-20 bg-opacity-50 py-20 flex items-center justify-center">
                     <div className="bg-white overflow-auto max-h-full p-5 rounded-md min-w-1/2">
                         <h2 className="text-xl mb-4 font-bold">Dane posterunku</h2>
                         <form>
@@ -239,9 +272,8 @@ export default function PostsAdmin() {
                             <div className="mb-4">
                                 <label htmlFor="type" className="block text-gray-700 text-sm font-semibold mb-2">Typ
                                     posterunku</label>
-                                <select id="type" value={editingPost?.type}
+                                <select id="type" value={editingPost?.type ?? ''}
                                         onChange={(e) => setEditingPostField('type', e.target.value)}
-                                        defaultValue=""
                                         className="form-input w-full px-4 py-2 border border-gray-400 rounded-lg text-gray-700 focus:ring-blue-500">
                                     <option disabled value="">Wybierz typ</option>
                                     {postTypes.map(type => (
@@ -253,6 +285,22 @@ export default function PostsAdmin() {
                                           onChange={(value) => setEditingPostField('organisationalUnit', value)}/>
                             <InputElement label="Posterunek nadrzędny (id)" value={editingPost?.superiorPost}
                                           onChange={(value) => setEditingPostField('superiorPost', value)}/>
+                            <DropdownSearch search={superiorPostSearch} setSearch={setSuperiorPostSearch}
+                                            maxWidth="510px"
+                                            hints={[
+                                                {
+                                                    id: '',
+                                                    name: 'Brak posterunku narzędnego'
+                                                },
+                                                ...posts.map(post => {
+                                                    if (post.ableToCast)
+                                                        return {
+                                                            id: post.id,
+                                                            name: post.fullName,
+                                                        } as DropdownHint;
+                                                }).filter(item => item) as DropdownHint[]]}
+                                            selectedElement={editingPost?.superiorPost ?? ''}
+                                            setElement={(e) => setEditingPostField('superiorPost', e)}/>
                             <CheckboxElement label="Możliwość obsadzenia"
                                              checked={editingPost?.ableToCast}
                                              onChange={(e) => setEditingPostField('ableToCast', e)}/>
@@ -313,48 +361,44 @@ export default function PostsAdmin() {
                     className="bg-blue-500 hover:bg-blue-700 w-44 self-end text-white py-2 px-4 rounded-md mr-9">
                 Dodaj posterunek
             </button>
-            <div className="overflow-x-auto sm:mx-0.5 lg:mx-0.5">
-                <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                    <div className="overflow-hidden">
-                        <table className="min-w-full">
-                            <thead className="bg-white border-b">
-                            <tr>
-                                <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                    Nazwa posterunku
-                                </th>
-                                <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                    Typ posterunku
-                                </th>
-                                <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                    Jednostka organizacyjna
-                                </th>
-                                <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                    Utworzono
-                                </th>
+            <div className="overflow-auto my-2 flex sm:mx-6 lg:mx-8">
+                <table className="min-w-full h-full">
+                    <thead className="bg-white sticky top-0 border-b">
+                    <tr>
+                        <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                            Nazwa posterunku
+                        </th>
+                        <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                            Typ posterunku
+                        </th>
+                        <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                            Jednostka organizacyjna
+                        </th>
+                        <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                            Utworzono
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        posts.map((post, index) => (
+                            <tr key={post.id} onClick={(e) => handleContextMenu(e, post.id)}
+                                className={`border-b ${index % 2 == 0 ? 'bg-gray-100' : 'bg-white'}`}>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{post.fullName}</td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                    {postTypes.find(t => t.value === post.type)?.label}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                    {post.organisationalUnit}
+                                </td>
+                                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                    {new Date(post.createdAt as EpochTimeStamp).toLocaleString()}
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                posts.map((post, index) => (
-                                    <tr key={post.id} onClick={(e) => handleContextMenu(e, post.id)}
-                                        className={`border-b ${index % 2 == 0 ? 'bg-gray-100' : 'bg-white'}`}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{post.fullName}</td>
-                                        <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            {postTypes.find(t => t.value === post.type)?.label}
-                                        </td>
-                                        <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            {post.organisationalUnit}
-                                        </td>
-                                        <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            {new Date(post.createdAt as EpochTimeStamp).toLocaleString()}
-                                        </td>
-                                    </tr>
-                                ))
-                            }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                        ))
+                    }
+                    </tbody>
+                </table>
             </div>
         </div>
     );
@@ -372,7 +416,7 @@ function InputElement({label, value, onChange, placeholder}: InputElementProps) 
         <div className="mb-4">
             <label htmlFor={label}
                    className="block text-gray-700 text-sm font-semibold mb-2">{label}</label>
-            <input type="text" id={label} value={value} placeholder={placeholder} autoComplete="off"
+            <input type="text" id={label} value={value ?? ''} placeholder={placeholder} autoComplete="off"
                    onChange={(e) => onChange(e.target.value)}
                    className="form-input w-full px-4 py-2 border border-gray-400 rounded-lg text-gray-700 focus:ring-blue-500"
             />

@@ -4,6 +4,10 @@ import Loading from "../components/common/loading.tsx";
 import Alert, {AlertProps} from "../components/common/alert.tsx";
 import {callApi, Method} from "../utils/call_api.ts";
 import {Project} from "../utils/types.ts";
+import DropdownSearch from "../components/common/dropdown-search.tsx";
+import AboutCap from "../components/common/about-cap.tsx";
+import {openInNewTabOrNewWindow, OpenInNewTabOrNewWindowProps} from "../utils/tauri.ts";
+import {Window as TauriWindow, WindowOptions} from "@tauri-apps/api/window";
 
 export default function ProjectSelector() {
     const navigate = useNavigate();
@@ -13,7 +17,6 @@ export default function ProjectSelector() {
 
     const [selectedProject, setSelectedProject] = useState('');
     const [search, setSearch] = useState('');
-    const [showHints, setShowHints] = useState(false);
 
     useEffect(() => {
         getData();
@@ -56,64 +59,59 @@ export default function ProjectSelector() {
         navigate(`/${selectedProject}/login`);
     }
 
-    const selectProject = (projectId: string) => {
-        const project = projects.find((project) => project.id === projectId) as Project;
-        setSearch(project.name);
-        setShowHints(false);
-        setSelectedProject(projectId);
-    }
-
-    const openHints = async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        setShowHints(true);
-    }
-
-    const searchProjects = (text: string) => {
-        setShowHints(true);
-        setSearch(text);
-    }
-
     const closeNotification = () => setAlertData(null);
 
     return (
-        <div onClick={() => setShowHints(false)}
-             className="bg-gray-100 bg-[url(../public/Przejazd.webp)] flex items-center select-none justify-center h-screen">
+        <div
+            className="bg-gray-100 bg-[url(../public/Przejazd.webp)] flex items-center select-none justify-center h-screen">
             <Loading enabled={loading}/>
             <Alert alertData={alertData} closeNotification={() => closeNotification()}/>
-            <a href="/about"
-               className="flex absolute right-0 bottom-0 h-32 m-5 opacity-50 hover:opacity-80 transition-opacity duration-100">
-                <img src="/icon-full.png" alt="logo"/>
-            </a>
+            <AboutCap/>
             <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
                 <h2 className="text-2xl font-semibold text-center mb-4">Wybierz projekt</h2>
                 <form onSubmit={formSubmit}>
-                    <div className="mb-6">
-                        <label htmlFor="select"
-                               className="block text-gray-700 text-sm font-semibold mb-2"></label>
-                        <input id="select" onFocus={() => openHints()} autoComplete="off"
-                               value={search} onChange={(e) => searchProjects(e.target.value)}
-                               className="form-input w-full px-4 py-2 border rounded-lg text-gray-700 border-gray-300 focus:ring-blue-500"/>
-                        <div
-                            className={`absolute w-full max-w-80 max-h-52 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg ${showHints ? '' : 'hidden'}`}>
-                            {projects.length === 0 &&
-                                <div className="p-2"><p className="text-sm text-gray-700">Brak wyników</p></div>}
-                            {projects.map((project: Project) => {
-                                if (project.name.toLowerCase().includes(search.toLowerCase()))
-                                    return <div className="p-2 cursor-pointer" onClick={() => selectProject(project.id)}
-                                                key={project.id}>
-                                        <p className="text-sm text-gray-700">{project.name}</p>
-                                    </div>;
-                            })}
-                        </div>
-                    </div>
+                    <DropdownSearch search={search} setSearch={setSearch} selectedElement={selectedProject}
+                                    setElement={setSelectedProject} hints={projects}
+                                    maxWidth="320px"
+                                    noElementsMessage="Nie znaleziono posterunków"/>
 
                     <button type="submit"
                             className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Przejdź
                         dalej
                     </button>
                     <p className="text-gray-600 text-xs text-center mt-4">
-                        Przechodząc dalej akceptujesz <a href="#"
-                                                         className="text-blue-500 hover:underline">Regulamin</a>.
+                        Przechodząc dalej akceptujesz <a
+                        onClick={() => openInNewTabOrNewWindow({
+                            window, url: '/docs/terms-of-service/pl',
+                            windowLabel: 'terms-of-service',
+                            windowOptions: {
+                                title: 'Warunki korzystania',
+                                center: true,
+                                focus: true,
+                                alwaysOnTop: true,
+                                minimizable: false,
+                                height: 700,
+                                width: 800,
+                                parent: TauriWindow.getCurrent(),
+                            } as WindowOptions
+                        } as OpenInNewTabOrNewWindowProps)}
+                        className="text-blue-500 hover:underline">Warunki
+                        korzystania</a> i <a
+                        onClick={() => openInNewTabOrNewWindow({
+                            window, url: '/docs/privacy-policy/pl',
+                            windowLabel: 'privacy-policy',
+                            windowOptions: {
+                                title: 'Polityka prywatności',
+                                center: true,
+                                focus: true,
+                                alwaysOnTop: true,
+                                minimizable: false,
+                                height: 700,
+                                width: 800,
+                                parent: TauriWindow.getCurrent(),
+                            } as WindowOptions
+                        } as OpenInNewTabOrNewWindowProps)}
+                        className="text-blue-500 hover:underline">Politykę prywatności</a>.
                     </p>
                 </form>
             </div>

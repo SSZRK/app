@@ -1,15 +1,14 @@
-import {Link} from 'react-router-dom';
-
 export default function About() {
 
     return (
         <div className="h-full bg-gray-200 p-8">
             <div className="bg-white rounded-lg shadow-xl pb-8">
                 <div className="w-full h-[250px]">
-                    <img src="/assets/tory.webp" className="w-full h-full object-cover rounded-tl-lg rounded-tr-lg"/>
+                    <img src="/assets/tory.webp" alt="background"
+                         className="w-full h-full object-cover rounded-tl-lg rounded-tr-lg"/>
                 </div>
                 <div className="flex flex-col items-center -mt-20">
-                    <Link to="/"> <img src="/assets/icons/icon-full.webp" className="w-40"/></Link>
+                    <img src="/assets/icons/icon-full.webp" alt="logo" className="w-40"/>
                     <div className="flex items-center space-x-2 mt-2">
                         <p className="text-2xl">Symulacyjny System Zarządzania Ruchem Kolejowym</p>
                     </div>
@@ -51,13 +50,18 @@ export default function About() {
                         <h4 className="text-xl text-gray-900 font-bold">Changelog</h4>
                         <div className="relative px-4">
                             <div className="absolute h-full border border-dashed border-opacity-20 border-black"/>
+                            <ChangelogElement title="Wydanie 0.1.2" description={[
+                                "Naprawiono znalezione błędy.",
+                                "Dodano nowe funkcje w panelu administracyjnym.",
+                                "Poprawiono integrację z aplikacją.",
+                            ]} date="14.11.2024"/>
                             <ChangelogElement title="Wydanie 0.1.1" description={[
                                 "Dodano wiele nowych funkcji, takich jak zarządzanie użytkownikami, projektami i wiele innych.",
                             ]} date="11.11.2024"/>
-                            <ChangelogElement title="Kolejne wydanie tego dnia" description={[
+                            <ChangelogElement title="Wydanie 0.0.2" description={[
                                 "Dodano automatyczne aktualizacje i ekran ładowania.",
                             ]} date="09.11.2024"/>
-                            <ChangelogElement title="Pierwsze testowe wydanie" description={[
+                            <ChangelogElement title="Wydanie 0.0.1" description={[
                                 "Utworzono podstawowy interfejs graficzny i podstawowe funkcje.",
                             ]} date="09.11.2024"/>
                         </div>

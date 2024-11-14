@@ -10,7 +10,7 @@ export const userRoles = [
     {value: 'not-verified', label: 'Niezweryfikowany'},
     {value: 'banned', label: 'Zbanowany'},
     {value: 'user', label: 'Użytkownik'},
-    {value: 'trainDriver', label: 'Maszynista'},
+    {value: 'driver', label: 'Maszynista'},
     {value: 'dispatcher', label: 'Dyżurny ruchu'},
     {value: 'admin', label: 'Administrator'},
 ];

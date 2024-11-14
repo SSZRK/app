@@ -4,6 +4,7 @@ import {callApi, Method} from "../utils/call_api.ts";
 import Alert, {AlertProps} from "../components/common/alert.tsx";
 import Loading from "../components/common/loading.tsx";
 import {decodeJwt, saveJwt} from "../utils/jwt.ts";
+import AboutCap from "../components/common/about-cap.tsx";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -104,10 +105,7 @@ export default function Login() {
         <div className="bg-gray-100 bg-[url(../public/Przejazd.webp)] flex items-center justify-center h-screen">
             <Loading enabled={loading}/>
             <Alert alertData={alertData} closeNotification={() => closeNotification()}/>
-            <a href="/about"
-               className="flex absolute right-0 bottom-0 h-32 m-5 opacity-50 hover:opacity-80 transition-opacity duration-100">
-                <img src="/icon-full.png" alt="logo"/>
-            </a>
+            <AboutCap/>
             <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
                 <h2 className="text-2xl font-semibold text-center mb-4">Zaloguj się</h2>
                 <form onSubmit={formSubmit}>

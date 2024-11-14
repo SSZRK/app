@@ -4,6 +4,7 @@ import {callApi, Method} from "../utils/call_api.ts";
 import Alert, {AlertProps} from "../components/common/alert.tsx";
 import Loading from "../components/common/loading.tsx";
 import {getJwt} from "../utils/jwt.ts";
+import AboutCap from "../components/common/about-cap.tsx";
 
 export default function UserSetter() {
     const {projectId} = useParams();
@@ -70,10 +71,7 @@ export default function UserSetter() {
         <div className="bg-gray-100 bg-[url(../public/Przejazd.webp)] flex items-center justify-center h-screen">
             <Loading enabled={loading}/>
             <Alert alertData={alertData} closeNotification={() => closeNotification()}/>
-            <a href="/about"
-               className="flex absolute right-0 bottom-0 h-32 m-5 opacity-50 hover:opacity-80 transition-opacity duration-100">
-                <img src="/icon-full.png" alt="logo"/>
-            </a>
+            <AboutCap/>
             <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
                 <h2 className="text-2xl font-semibold text-center mb-2">Utwórz konto w projekcie</h2>
                 <p className="text-center text-sm text-gray-500 mb-4">Niezależnie od tego, czy masz już konto w innym
